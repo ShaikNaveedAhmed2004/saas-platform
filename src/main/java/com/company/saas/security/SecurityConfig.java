@@ -24,22 +24,26 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
 
+                        // public endpoints
                         .requestMatchers(
                                 "/auth/**",
-                                "/users",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        // only admin can manage users
                         .requestMatchers("/users/**")
                         .hasRole("ADMIN")
 
+                        // app management
                         .requestMatchers("/apps/**")
                         .hasAnyRole("ADMIN","MANAGER")
 
+                        // license management
                         .requestMatchers("/licenses/**")
                         .hasAnyRole("ADMIN","MANAGER")
 
+                        // analytics
                         .requestMatchers("/analytics/**")
                         .hasRole("ADMIN")
 
@@ -48,12 +52,10 @@ public class SecurityConfig {
                 )
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
-        http.addFilterBefore(
-                jwtFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

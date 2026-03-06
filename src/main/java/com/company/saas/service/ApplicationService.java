@@ -74,6 +74,13 @@ public class ApplicationService {
                     "Cannot reduce licenses below active assignments");
         }
 
+        // update fields
+        if(dto.getAppName() != null)
+            app.setAppName(dto.getAppName());
+
+        if(dto.getVendor() != null)
+            app.setVendor(dto.getVendor());
+
         app.setLicenseCount(dto.getLicenseCount());
         app.setCostPerLicense(dto.getCostPerLicense());
 
